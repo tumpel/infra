@@ -1,0 +1,7 @@
+.dev.vars
+.env
+.tmp/
+.wrangler/
+dist/
+node_modules/
+target/
