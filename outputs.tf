@@ -18,6 +18,23 @@ output "sessions_bucket" {
   value = cloudflare_r2_bucket.sessions.name
 }
 
+output "proof_common_name" {
+  description = "Common name of the proof service token in the Access JWT; npm run deploy sets it as the Worker var ACCESS_PROOF_COMMON_NAME."
+  value       = nonsensitive(cloudflare_zero_trust_access_service_token.proof.client_id)
+}
+
+output "proof_client_id" {
+  sensitive   = true
+  description = "CF-Access-Client-Id of the proof service token; npm-scripts/proof-env.mjs passes it to the proof as TUMPEL_PROOF_CLIENT_ID."
+  value       = cloudflare_zero_trust_access_service_token.proof.client_id
+}
+
+output "proof_client_secret" {
+  sensitive   = true
+  description = "CF-Access-Client-Secret of the proof service token; npm-scripts/proof-env.mjs passes it to the proof as TUMPEL_PROOF_CLIENT_SECRET."
+  value       = cloudflare_zero_trust_access_service_token.proof.client_secret
+}
+
 output "worker_secrets" {
   sensitive   = true
   description = "Worker secrets of the stage; the S3 key pair derives from the R2 token: access key id is the token id, secret is the SHA-256 hex of the token value. SECRETS_KEK wraps each tenant's data key for secret values."

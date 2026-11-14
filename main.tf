@@ -37,6 +37,10 @@ resource "cloudflare_zero_trust_access_application" "browser" {
     {
       id         = cloudflare_zero_trust_access_policy.approvers.id
       precedence = 1
+    },
+    {
+      id         = cloudflare_zero_trust_access_policy.proof.id
+      precedence = 2
     }
   ]
 }
