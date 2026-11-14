@@ -33,3 +33,9 @@ variable "approver_emails" {
     error_message = "List at least one email address."
   }
 }
+
+variable "bootstrap_api_token" {
+  type        = string
+  sensitive   = true
+  description = "Account-owned token holding Account API Tokens Write; mints the stage's R2 token, which the project token cannot."
+}

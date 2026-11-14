@@ -21,3 +21,8 @@ terraform {
 }
 
 provider "cloudflare" {}
+
+provider "cloudflare" {
+  alias     = "bootstrap"
+  api_token = var.bootstrap_api_token
+}
