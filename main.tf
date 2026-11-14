@@ -8,24 +8,25 @@ data "cloudflare_zero_trust_organization" "this" {
 
 resource "cloudflare_d1_database" "tumpel" {
   account_id            = var.account_id
-  name                  = "tumpel"
+  name                  = "tumpel-${var.stage}"
   primary_location_hint = "weur"
 
   lifecycle {
     prevent_destroy = true
+    ignore_changes  = [name]
   }
 }
 
 resource "cloudflare_zero_trust_access_policy" "approvers" {
   account_id = var.account_id
-  name       = "tumpel approvers"
+  name       = "tumpel approvers ${var.stage}"
   decision   = "allow"
   include    = [for email in distinct([for email in var.approver_emails : lower(email)]) : { email = { email = email } }]
 }
 
 resource "cloudflare_zero_trust_access_application" "browser" {
   account_id                = var.account_id
-  name                      = "tumpel browser pages"
+  name                      = "tumpel browser pages ${var.stage}"
   type                      = "self_hosted"
   session_duration          = "24h"
   app_launcher_visible      = false
@@ -42,7 +43,7 @@ resource "cloudflare_zero_trust_access_application" "browser" {
 
 resource "cloudflare_r2_bucket" "sessions" {
   account_id = var.account_id
-  name       = "tumpel-sessions"
+  name       = "tumpel-sessions-${var.stage}"
   location   = "weur"
 
   lifecycle {

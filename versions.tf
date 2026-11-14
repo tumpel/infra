@@ -10,7 +10,6 @@ terraform {
 
   backend "s3" {
     bucket                      = "tumpel-tfstate"
-    key                         = "tumpel.tfstate"
     region                      = "auto"
     use_path_style              = true
     skip_credentials_validation = true

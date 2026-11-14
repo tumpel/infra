@@ -1,3 +1,13 @@
+variable "stage" {
+  type        = string
+  description = "Stage name; account-wide resources carry it so stages sit side by side."
+
+  validation {
+    condition     = can(regex("^[a-z][a-z0-9]{1,15}$", var.stage))
+    error_message = "Use 2 to 16 lower-case letters and digits, starting with a letter."
+  }
+}
+
 variable "account_id" {
   type        = string
   description = "Cloudflare account that runs the control plane."
