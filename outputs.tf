@@ -13,3 +13,7 @@ output "access_aud" {
 output "hostname" {
   value = var.hostname
 }
+
+output "sessions_bucket" {
+  value = cloudflare_r2_bucket.sessions.name
+}

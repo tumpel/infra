@@ -39,3 +39,13 @@ resource "cloudflare_zero_trust_access_application" "browser" {
     }
   ]
 }
+
+resource "cloudflare_r2_bucket" "sessions" {
+  account_id = var.account_id
+  name       = "tumpel-sessions"
+  location   = "weur"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
