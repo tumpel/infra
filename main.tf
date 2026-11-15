@@ -8,6 +8,7 @@ locals {
     "/github/app/setup",
     "/github/app/created",
     "/github/app/installed",
+    "/v1/issuer-keys/rotate",
   ]
 }
 
