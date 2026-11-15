@@ -14,8 +14,8 @@ output "hostname" {
   value = local.api_hostname
 }
 
-output "app_hostname" {
-  value = local.app_hostname
+output "dashboard_hostname" {
+  value = local.dashboard_hostname
 }
 
 output "issuer_hostname" {

@@ -1,8 +1,9 @@
 locals {
-  stage_prefix    = var.stage == "prod" ? "" : "${var.stage}."
-  api_hostname    = "api.${local.stage_prefix}${var.zone_name}"
-  app_hostname    = "app.${local.stage_prefix}${var.zone_name}"
-  issuer_hostname = "id.${local.stage_prefix}${var.zone_name}"
+  stage_prefix       = var.stage == "prod" ? "" : "${var.stage}."
+  api_hostname       = "api.${local.stage_prefix}${var.zone_name}"
+  app_hostname       = "app.${local.stage_prefix}${var.zone_name}"
+  dashboard_hostname = var.stage == "prod" ? var.zone_name : "${var.stage}.${var.zone_name}"
+  issuer_hostname    = "id.${local.stage_prefix}${var.zone_name}"
 }
 
 data "cloudflare_zone" "this" {
@@ -26,6 +27,14 @@ resource "cloudflare_workers_custom_domain" "app" {
   account_id = var.account_id
   zone_id    = data.cloudflare_zone.this.id
   hostname   = local.app_hostname
+  service    = "tumpel-dashboard-${var.stage}"
+}
+
+resource "cloudflare_workers_custom_domain" "dashboard" {
+  provider   = cloudflare.bootstrap
+  account_id = var.account_id
+  zone_id    = data.cloudflare_zone.this.id
+  hostname   = local.dashboard_hostname
   service    = "tumpel-dashboard-${var.stage}"
 }
 

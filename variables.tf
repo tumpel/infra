@@ -16,7 +16,7 @@ variable "account_id" {
 variable "zone_name" {
   type        = string
   default     = "tumpel.dev"
-  description = "Cloudflare zone that carries every stage hostname; prod takes api, app and id directly under the zone, every other stage under <stage>.<zone>."
+  description = "Cloudflare zone that carries every stage hostname; prod takes api and id directly under the zone and the dashboard on the apex, every other stage under <stage>.<zone>."
 }
 
 variable "otp_idp_id" {
