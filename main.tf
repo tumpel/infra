@@ -9,6 +9,8 @@ locals {
     "/github/app/created",
     "/github/app/installed",
     "/v1/issuer-keys/rotate",
+    "/invitations/accept",
+    "/v1/invitations/accept",
   ]
 }
 
