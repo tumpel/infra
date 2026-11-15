@@ -13,9 +13,10 @@ variable "account_id" {
   description = "Cloudflare account that runs the control plane."
 }
 
-variable "hostname" {
+variable "zone_name" {
   type        = string
-  description = "Hostname the Worker serves; only the browser pages and the calls they make sit behind a Cloudflare Access login."
+  default     = "tumpel.dev"
+  description = "Cloudflare zone that carries every stage hostname; prod takes api, app and id directly under the zone, every other stage under <stage>.<zone>."
 }
 
 variable "otp_idp_id" {

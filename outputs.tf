@@ -11,7 +11,15 @@ output "access_aud" {
 }
 
 output "hostname" {
-  value = var.hostname
+  value = local.api_hostname
+}
+
+output "app_hostname" {
+  value = local.app_hostname
+}
+
+output "issuer_hostname" {
+  value = local.issuer_hostname
 }
 
 output "sessions_bucket" {

@@ -41,7 +41,7 @@ resource "cloudflare_zero_trust_access_application" "browser" {
   app_launcher_visible      = false
   allowed_idps              = [var.otp_idp_id]
   auto_redirect_to_identity = true
-  destinations              = [for path in local.browser_paths : { type = "public", uri = "${var.hostname}${path}" }]
+  destinations              = [for path in local.browser_paths : { type = "public", uri = "${local.api_hostname}${path}" }]
   policies = [
     {
       id         = cloudflare_zero_trust_access_policy.approvers.id
