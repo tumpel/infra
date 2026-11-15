@@ -63,3 +63,13 @@ resource "cloudflare_r2_bucket" "sessions" {
     prevent_destroy = true
   }
 }
+
+resource "cloudflare_r2_bucket" "releases" {
+  account_id = var.account_id
+  name       = "tumpel-releases-${var.stage}"
+  location   = "weur"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}

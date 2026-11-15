@@ -45,11 +45,35 @@ output "proof_client_secret" {
 
 output "worker_secrets" {
   sensitive   = true
-  description = "Worker secrets of the stage; the S3 key pair derives from the R2 token: access key id is the token id, secret is the SHA-256 hex of the token value. SECRETS_KEK wraps each tenant's data key for secret values."
+  description = "Worker secrets of the stage; the S3 key pair derives from the R2 token: access key id is the token id, secret is the SHA-256 hex of the token value. RELEASES_ACCESS_KEY_ID and RELEASES_SECRET_ACCESS_KEY derive the same way from the read-only token of the release bucket. SECRETS_KEK wraps each tenant's data key for secret values."
   value = {
-    R2_ACCOUNT_ID        = var.account_id
-    R2_ACCESS_KEY_ID     = cloudflare_account_token.r2.id
-    R2_SECRET_ACCESS_KEY = sha256(cloudflare_account_token.r2.value)
-    SECRETS_KEK          = random_bytes.secrets_kek.base64
+    R2_ACCOUNT_ID              = var.account_id
+    R2_ACCESS_KEY_ID           = cloudflare_account_token.r2.id
+    R2_SECRET_ACCESS_KEY       = sha256(cloudflare_account_token.r2.value)
+    SECRETS_KEK                = random_bytes.secrets_kek.base64
+    RELEASES_ACCESS_KEY_ID     = cloudflare_account_token.releases_read.id
+    RELEASES_SECRET_ACCESS_KEY = sha256(cloudflare_account_token.releases_read.value)
   }
+}
+
+output "releases_bucket" {
+  description = "R2 bucket the release workflow uploads to: supervisor/<arch>/<sha256>, images/<harness>/<harnessVersion>/<arch>/<digest>, kernels/<arch>/<sha256>, and current.json last."
+  value       = cloudflare_r2_bucket.releases.name
+}
+
+output "cloudflare_account_id" {
+  description = "Account of the release bucket; the release workflow reads it as the repository secret CLOUDFLARE_ACCOUNT_ID."
+  value       = var.account_id
+}
+
+output "r2_releases_access_key_id" {
+  sensitive   = true
+  description = "S3 access key id of tumpel-releases-upload-<stage>, Object Read & Write on the release bucket alone: the token id. Repository secret R2_RELEASES_ACCESS_KEY_ID; npm run release:secrets sets it."
+  value       = cloudflare_account_token.releases_upload.id
+}
+
+output "r2_releases_secret_access_key" {
+  sensitive   = true
+  description = "S3 secret access key of tumpel-releases-upload-<stage>: the SHA-256 hex of the token value. Repository secret R2_RELEASES_SECRET_ACCESS_KEY; npm run release:secrets sets it."
+  value       = sha256(cloudflare_account_token.releases_upload.value)
 }

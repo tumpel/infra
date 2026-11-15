@@ -17,3 +17,37 @@ resource "cloudflare_account_token" "r2" {
     },
   ]
 }
+
+data "cloudflare_account_api_token_permission_groups_list" "r2_item_read" {
+  provider   = cloudflare.bootstrap
+  account_id = var.account_id
+  name       = "Workers R2 Storage Bucket Item Read"
+}
+
+resource "cloudflare_account_token" "releases_upload" {
+  provider   = cloudflare.bootstrap
+  account_id = var.account_id
+  name       = "tumpel-releases-upload-${var.stage}"
+
+  policies = [
+    {
+      effect            = "allow"
+      resources         = jsonencode({ "com.cloudflare.edge.r2.bucket.${var.account_id}_default_${cloudflare_r2_bucket.releases.name}" = "*" })
+      permission_groups = [{ id = one(data.cloudflare_account_api_token_permission_groups_list.r2_item_write.result).id }]
+    },
+  ]
+}
+
+resource "cloudflare_account_token" "releases_read" {
+  provider   = cloudflare.bootstrap
+  account_id = var.account_id
+  name       = "tumpel-releases-read-${var.stage}"
+
+  policies = [
+    {
+      effect            = "allow"
+      resources         = jsonencode({ "com.cloudflare.edge.r2.bucket.${var.account_id}_default_${cloudflare_r2_bucket.releases.name}" = "*" })
+      permission_groups = [{ id = one(data.cloudflare_account_api_token_permission_groups_list.r2_item_read.result).id }]
+    },
+  ]
+}
