@@ -75,3 +75,25 @@ resource "cloudflare_r2_bucket" "releases" {
     prevent_destroy = true
   }
 }
+
+resource "cloudflare_queue" "releases" {
+  account_id = var.account_id
+  queue_name = "tumpel-releases-${var.stage}"
+
+  settings = {
+    delivery_delay = 60
+  }
+}
+
+resource "cloudflare_r2_bucket_event_notification" "current_release" {
+  account_id  = var.account_id
+  bucket_name = cloudflare_r2_bucket.releases.name
+  queue_id    = cloudflare_queue.releases.queue_id
+
+  rules = [{
+    actions     = ["PutObject", "CopyObject", "CompleteMultipartUpload"]
+    prefix      = "current.json"
+    suffix      = "current.json"
+    description = "Tells the control plane a release was published, so it sends every Online host ReleasePublished"
+  }]
+}

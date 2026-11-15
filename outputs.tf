@@ -77,3 +77,8 @@ output "r2_releases_secret_access_key" {
   description = "S3 secret access key of tumpel-releases-upload-<stage>: the SHA-256 hex of the token value. Repository secret R2_RELEASES_SECRET_ACCESS_KEY; npm run release:secrets sets it."
   value       = sha256(cloudflare_account_token.releases_upload.value)
 }
+
+output "releases_queue" {
+  description = "Queue that receives the release bucket's current.json writes after a delay past the release cache; the control plane consumes it and sends every Online host ReleasePublished."
+  value       = cloudflare_queue.releases.queue_name
+}
