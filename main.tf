@@ -1,5 +1,14 @@
 locals {
-  browser_paths = ["/device", "/v1/tenants", "/v1/device/approve", "/v1/device/deny", "/oauth/consent"]
+  browser_paths = [
+    "/device",
+    "/v1/tenants",
+    "/v1/device/approve",
+    "/v1/device/deny",
+    "/oauth/consent",
+    "/github/app/setup",
+    "/github/app/created",
+    "/github/app/installed",
+  ]
 }
 
 data "cloudflare_zero_trust_organization" "this" {
