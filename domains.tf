@@ -29,15 +29,12 @@ resource "cloudflare_workers_custom_domain" "app" {
   service    = "tumpel-dashboard-${var.stage}"
 }
 
-resource "cloudflare_dns_record" "issuer" {
-  provider = cloudflare.bootstrap
-  zone_id  = data.cloudflare_zone.this.id
-  name     = local.issuer_hostname
-  type     = "AAAA"
-  content  = "100::"
-  proxied  = true
-  ttl      = 1
-  comment  = "Reserved as the tumpel ${var.stage} issuer; never rename once tenants pin it. Serves nothing yet."
+resource "cloudflare_workers_custom_domain" "issuer" {
+  provider   = cloudflare.bootstrap
+  account_id = var.account_id
+  zone_id    = data.cloudflare_zone.this.id
+  hostname   = local.issuer_hostname
+  service    = "tumpel-control-plane-${var.stage}"
 
   lifecycle {
     prevent_destroy = true
