@@ -29,7 +29,14 @@ resource "cloudflare_dns_record" "app" {
   content  = "100::"
   proxied  = true
   ttl      = 1
-  comment  = "Reserved for the tumpel ${var.stage} dashboard; serves nothing yet."
+  comment  = "The tumpel ${var.stage} dashboard; the Worker route app serves it."
+}
+
+resource "cloudflare_workers_route" "app" {
+  provider = cloudflare.bootstrap
+  zone_id  = data.cloudflare_zone.this.id
+  pattern  = "${local.app_hostname}/*"
+  script   = "tumpel-dashboard-${var.stage}"
 }
 
 resource "cloudflare_dns_record" "issuer" {
