@@ -21,22 +21,12 @@ resource "cloudflare_workers_custom_domain" "api" {
   service    = "tumpel-control-plane-${var.stage}"
 }
 
-resource "cloudflare_dns_record" "app" {
-  provider = cloudflare.bootstrap
-  zone_id  = data.cloudflare_zone.this.id
-  name     = local.app_hostname
-  type     = "AAAA"
-  content  = "100::"
-  proxied  = true
-  ttl      = 1
-  comment  = "The tumpel ${var.stage} dashboard; the Worker route app serves it."
-}
-
-resource "cloudflare_workers_route" "app" {
-  provider = cloudflare.bootstrap
-  zone_id  = data.cloudflare_zone.this.id
-  pattern  = "${local.app_hostname}/*"
-  script   = "tumpel-dashboard-${var.stage}"
+resource "cloudflare_workers_custom_domain" "app" {
+  provider   = cloudflare.bootstrap
+  account_id = var.account_id
+  zone_id    = data.cloudflare_zone.this.id
+  hostname   = local.app_hostname
+  service    = "tumpel-dashboard-${var.stage}"
 }
 
 resource "cloudflare_dns_record" "issuer" {
