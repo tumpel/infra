@@ -8,3 +8,4 @@ target/
 *.tfstate*
 .terraform/
 dist-storybook/
+build/
