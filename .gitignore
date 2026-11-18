@@ -4,8 +4,6 @@
 .wrangler/
 dist/
 node_modules/
-target/
 *.tfstate*
 .terraform/
 dist-storybook/
-build/
