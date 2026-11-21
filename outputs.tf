@@ -58,11 +58,8 @@ output "worker_secrets" {
 }
 
 output "vapid_public_key" {
-  description = "URL-safe base64 of the uncompressed P-256 public key for Web Push subscriptions."
-  value = replace(replace(
-    trimsuffix(substr(split(" ", trimspace(tls_private_key.vapid.public_key_openssh))[1], 52, -1), "="),
-    "+", "-"
-  ), "/", "_")
+  description = "PEM-encoded P-256 public key for Web Push subscriptions."
+  value       = tls_private_key.vapid.public_key_pem
 }
 
 output "releases_bucket" {
