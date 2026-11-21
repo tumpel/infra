@@ -51,3 +51,23 @@ resource "cloudflare_account_token" "releases_read" {
     },
   ]
 }
+
+data "cloudflare_account_api_token_permission_groups_list" "account_analytics_read" {
+  provider   = cloudflare.bootstrap
+  account_id = var.account_id
+  name       = "Account Analytics Read"
+}
+
+resource "cloudflare_account_token" "metrics_read" {
+  provider   = cloudflare.bootstrap
+  account_id = var.account_id
+  name       = "tumpel-metrics-read-${var.stage}"
+
+  policies = [
+    {
+      effect            = "allow"
+      resources         = jsonencode({ "com.cloudflare.api.account.${var.account_id}" = "*" })
+      permission_groups = [{ id = one(data.cloudflare_account_api_token_permission_groups_list.account_analytics_read.result).id }]
+    },
+  ]
+}

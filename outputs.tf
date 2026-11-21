@@ -45,7 +45,7 @@ output "proof_client_secret" {
 
 output "worker_secrets" {
   sensitive   = true
-  description = "Worker secrets of the stage; the S3 key pair derives from the R2 token: access key id is the token id, secret is the SHA-256 hex of the token value. RELEASES_ACCESS_KEY_ID and RELEASES_SECRET_ACCESS_KEY derive the same way from the read-only token of the release bucket. SECRETS_KEK wraps each tenant's data key for secret values. VAPID_PRIVATE_KEY signs Web Push requests."
+  description = "Worker secrets of the stage; the S3 key pair derives from the R2 token: access key id is the token id, secret is the SHA-256 hex of the token value. RELEASES_ACCESS_KEY_ID and RELEASES_SECRET_ACCESS_KEY derive the same way from the read-only token of the release bucket. SECRETS_KEK wraps each tenant's data key for secret values. VAPID_PRIVATE_KEY signs Web Push requests. METRICS_READ_TOKEN holds Account Analytics Read alone and queries Workers Analytics Engine in METRICS_ACCOUNT_ID."
   value = {
     R2_ACCOUNT_ID              = var.account_id
     R2_ACCESS_KEY_ID           = cloudflare_account_token.r2.id
@@ -54,6 +54,8 @@ output "worker_secrets" {
     RELEASES_ACCESS_KEY_ID     = cloudflare_account_token.releases_read.id
     RELEASES_SECRET_ACCESS_KEY = sha256(cloudflare_account_token.releases_read.value)
     VAPID_PRIVATE_KEY          = tls_private_key.vapid.private_key_pem_pkcs8
+    METRICS_READ_TOKEN         = cloudflare_account_token.metrics_read.value
+    METRICS_ACCOUNT_ID         = var.account_id
   }
 }
 
