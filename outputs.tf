@@ -45,7 +45,7 @@ output "proof_client_secret" {
 
 output "worker_secrets" {
   sensitive   = true
-  description = "Worker secrets of the stage; the S3 key pair derives from the R2 token: access key id is the token id, secret is the SHA-256 hex of the token value. RELEASES_ACCESS_KEY_ID and RELEASES_SECRET_ACCESS_KEY derive the same way from the read-only token of the release bucket. SECRETS_KEK wraps each tenant's data key for secret values."
+  description = "Worker secrets of the stage; the S3 key pair derives from the R2 token: access key id is the token id, secret is the SHA-256 hex of the token value. RELEASES_ACCESS_KEY_ID and RELEASES_SECRET_ACCESS_KEY derive the same way from the read-only token of the release bucket. SECRETS_KEK wraps each tenant's data key for secret values. VAPID_PRIVATE_KEY signs Web Push requests."
   value = {
     R2_ACCOUNT_ID              = var.account_id
     R2_ACCESS_KEY_ID           = cloudflare_account_token.r2.id
@@ -53,7 +53,13 @@ output "worker_secrets" {
     SECRETS_KEK                = random_bytes.secrets_kek.base64
     RELEASES_ACCESS_KEY_ID     = cloudflare_account_token.releases_read.id
     RELEASES_SECRET_ACCESS_KEY = sha256(cloudflare_account_token.releases_read.value)
+    VAPID_PRIVATE_KEY          = tls_private_key.vapid.private_key_pem_pkcs8
   }
+}
+
+output "vapid_public_key" {
+  description = "PEM-encoded P-256 public key for Web Push subscriptions."
+  value       = tls_private_key.vapid.public_key_pem
 }
 
 output "releases_bucket" {
