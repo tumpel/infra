@@ -85,6 +85,11 @@ resource "cloudflare_queue" "releases" {
   }
 }
 
+resource "cloudflare_queue" "releases_dead_letter" {
+  account_id = var.account_id
+  queue_name = "${cloudflare_queue.releases.queue_name}-dlq"
+}
+
 resource "cloudflare_r2_bucket_event_notification" "current_release" {
   account_id  = var.account_id
   bucket_name = cloudflare_r2_bucket.releases.name
